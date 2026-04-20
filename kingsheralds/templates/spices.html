@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spices - Kings Heralds Natural Hub</title>
+    <link rel="stylesheet" href="{% static 'css/category.css' %}">
+</head>
+<body>
+
+<!-- Header with logo and glowing nav -->
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Kings Heralds Logo" class="circle-logo">
+            <div class="logo-text">
+                <h1>Kings Heralds Natural Hub</h1>
+                <p class="motto">Your Natural Health Solution</p>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'products' %}">Products</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'logout' %}">Logout ({{ user.username }})</a></li>
+                    {% if user.is_superuser %}
+                        <li><a href="{% url 'admin_dashboard' %}">Admin Panel</a></li>
+                    {% endif %}
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="category-container">
+        <h1>Our Spices</h1>
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% endif %}
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <div class="price">KSh {{ product.price }} / {{ product.unit|default:"g" }}</div>
+                <button onclick="openPurchaseModal('{{ product.name }}')" class="buy-btn">Buy Now</button>
+            </div>
+            {% empty %}
+                <p>No spices available at the moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+<!-- Purchase Confirmation Modal -->
+<div id="purchaseModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePurchaseModal()">&times;</span>
+        <h3>Confirm Purchase</h3>
+        <p id="modalProductName">Do you want to purchase this product?</p>
+        <div class="modal-buttons">
+            <button id="confirmYesBtn" class="confirm-btn">Yes, Proceed</button>
+            <button id="confirmNoBtn" class="cancel-btn">No, Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Global variable to store product name for purchase
+    let selectedProductName = '';
+
+    // Open the purchase confirmation modal
+    function openPurchaseModal(productName) {
+        selectedProductName = productName;
+        const modal = document.getElementById('purchaseModal');
+        const modalText = document.getElementById('modalProductName');
+        modalText.innerText = `Do you want to purchase "${productName}"?`;
+        modal.style.display = 'block';
+    }
+
+    // Close purchase modal without action
+    function closePurchaseModal() {
+        document.getElementById('purchaseModal').style.display = 'none';
+        selectedProductName = '';
+    }
+
+    // Proceed to WhatsApp
+    function proceedToWhatsApp() {
+        if (selectedProductName) {
+            const whatsappNumber = "254714692912";
+            const message = `Hello Stella, I want to purchase this product: ${selectedProductName}`;
+            window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+        closePurchaseModal();
+    }
+
+    // Attach event listeners to modal buttons
+    document.getElementById('confirmYesBtn').addEventListener('click', proceedToWhatsApp);
+    document.getElementById('confirmNoBtn').addEventListener('click', closePurchaseModal);
+
+    // Close modal when clicking outside content
+    window.onclick = function(event) {
+        const modal = document.getElementById('purchaseModal');
+        if (event.target === modal) {
+            closePurchaseModal();
+        }
+    }
+</script>
+
+</body>
+</html>

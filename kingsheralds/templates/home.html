@@ -1,0 +1,276 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kings Heralds Natural Hub - Home</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+
+<!-- ========== HEADER with Circular Logo & Glow (hidden on scroll, shows only at top) ========== -->
+<header id="mainHeader">
+    <div class="header-container">
+        <div class="logo-area">
+            <img src="{% static 'images/logo.png' %}" alt="Kings Heralds Logo" class="logo-img">
+            <div class="logo">
+                <h1>Kings Heralds Natural Hub</h1>
+                <p class="motto">Your Natural Health Solution</p>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'products' %}">Products</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'logout' %}">Logout ({{ user.username }})</a></li>
+                    {% if user.is_superuser %}
+                        <li><a href="{% url 'admin_dashboard' %}">Admin Panel</a></li>
+                    {% endif %}
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- ========== MAIN CONTENT ========== -->
+<main>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to Kings Heralds Natural Hub</h1>
+            <p>Your Natural Health Solution</p>
+            <a href="{% url 'products' %}" class="cta-button">Shop Now</a>
+        </div>
+    </section>
+
+    <section class="about">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>We offer high quality protocol treatments using lifestyle changes and natural medicine to reverse and manage chronic illness. Our approach combines ancient wisdom with modern science to provide effective, natural solutions for various health conditions.</p>
+            
+            <h3>The Power of Natural Spices</h3>
+            <p>Natural spices have been used for thousands of years not just for flavor, but for their remarkable healing properties. Turmeric contains curcumin, a powerful anti-inflammatory compound that helps reduce chronic inflammation. Cinnamon helps regulate blood sugar levels and improves insulin sensitivity. Ginger aids digestion and reduces nausea while boosting immune function. Cayenne pepper contains capsaicin which boosts metabolism and reduces pain. Black pepper enhances nutrient absorption and has antioxidant properties.</p>
+            
+            <p>Our carefully selected spices are sourced from organic farms and processed to preserve their active compounds. Each spice undergoes rigorous quality testing to ensure potency and purity. We believe in the healing power of nature and provide these spices as part of our holistic approach to wellness.</p>
+            
+            <p>At Kings Heralds Natural Hub, we combine these powerful spices with herbal remedies and educational PDFs to create comprehensive health protocols. Our team of natural health practitioners has developed protocols for managing diabetes, hypertension, digestive disorders, and chronic inflammatory conditions.</p>
+        </div>
+    </section>
+
+    <section class="featured-products">
+        <div class="container">
+            <h2>Featured Products</h2>
+            <div class="product-grid">
+                {% for product in featured_products %}
+                <div class="product-card">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% endif %}
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.description|truncatewords:20 }}</p>
+                    <div class="price">KSh {{ product.price }}</div>
+                    <button onclick="openPurchaseModal('{{ product.name }}')" class="buy-btn">Buy Now</button>
+                </div>
+                {% empty %}
+                    <p>No products available yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- ========== PURCHASE CONFIRMATION MODAL ========== -->
+<div id="purchaseModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePurchaseModal()">&times;</span>
+        <h3>Confirm Purchase</h3>
+        <div class="modal-body">
+            <p id="modalProductName">Do you want to purchase this product?</p>
+            <div class="modal-buttons">
+                <button id="confirmYesBtn" class="confirm-btn">Yes, Proceed</button>
+                <button id="confirmNoBtn" class="cancel-btn">No, Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== FOOTER with modals ========== -->
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="#" onclick="openModal('founderModal')">Founder</a></li>
+                <li><a href="#" onclick="openModal('termsModal')">Terms of Service</a></li>
+                <li><a href="#" onclick="openModal('privacyModal')">Privacy Policy</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Contact Us</h3>
+            <p>Phone: +254714692912</p>
+            <p>WhatsApp: +254743032005</p>
+            <p>Email: kingsheraldsnh@gmail.com</p>
+        </div>
+        <div class="footer-section">
+            <h3>About</h3>
+            <p>We offer high quality protocol treatments using lifestyle changes and natural medicine to reverse and manage chronic illness.</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Kings Heralds Natural Hub. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" class="scroll-top-btn" title="Go to top">↑</button>
+
+<!-- Founder Modal (scrollable) -->
+<div id="founderModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('founderModal')">&times;</span>
+        <h2>Founder - Stella Peter</h2>
+        <div class="modal-body">
+            <img src="{% static 'images/founder.jpg' %}" alt="Founder Stella">
+            <p>Kings Heralds Natural Hub was founded by <strong>Stella Peter</strong>, a passionate advocate for natural healing and holistic wellness. With over 10 years of experience in herbal medicine and nutritional therapy, Stella is dedicated to helping individuals reverse chronic illnesses through lifestyle changes and natural remedies. Her vision is to make natural health accessible to everyone in Kenya and beyond.</p>
+            <p>Stella holds certifications in Clinical Nutrition and Herbalism, and she continues to research traditional healing practices from around the world.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Terms of Service Modal (scrollable) -->
+<div id="termsModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('termsModal')">&times;</span>
+        <h2>Terms of Service</h2>
+        <div class="modal-body">
+            <p><strong>Last updated:</strong> 2026</p>
+            <p>By accessing and using this website, you agree to be bound by these Terms of Service.</p>
+            <h3>1. Use of Products</h3>
+            <p>All spices, herbs, and PDFs sold on this website are for personal use only. You may not resell or distribute any product without written permission.</p>
+            <h3>2. Medical Disclaimer</h3>
+            <p>The information provided on this website is for educational purposes only and is not intended as medical advice. Always consult a qualified healthcare professional before starting any new treatment or supplement.</p>
+            <h3>3. Payments and Refunds</h3>
+            <p>Payments are processed securely. Due to the nature of our products, we do not offer refunds on PDFs or opened consumables. For damaged items, contact us within 7 days.</p>
+            <h3>4. User Conduct</h3>
+            <p>You agree not to misuse the website, attempt to hack, or upload malicious content. We reserve the right to ban users who violate these terms.</p>
+            <h3>5. Limitation of Liability</h3>
+            <p>Kings Heralds Natural Hub is not liable for any adverse effects resulting from the use of our products. Use at your own risk.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Policy Modal (scrollable) -->
+<div id="privacyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('privacyModal')">&times;</span>
+        <h2>Privacy Policy</h2>
+        <div class="modal-body">
+            <p><strong>Effective date:</strong> 2026</p>
+            <p>Your privacy is important to us. This policy explains how we collect, use, and protect your personal information.</p>
+            <h3>1. Information We Collect</h3>
+            <p>We collect your name, email, phone number, and address when you register or make a purchase. Payment information is processed by our secure gateway and not stored on our servers.</p>
+            <h3>2. How We Use Your Information</h3>
+            <p>We use your data to process orders, communicate with you, and improve our services. We do not sell or rent your personal information to third parties.</p>
+            <h3>3. Data Security</h3>
+            <p>We implement SSL encryption and other security measures to protect your data. However, no method of transmission over the internet is 100% secure.</p>
+            <h3>4. Your Rights</h3>
+            <p>You may request access to, correction, or deletion of your personal data by contacting us. You may also opt out of marketing emails.</p>
+            <h3>5. Cookies</h3>
+            <p>We use cookies to enhance user experience and analyze site traffic. You can disable cookies in your browser settings.</p>
+            <h3>6. Changes to Policy</h3>
+            <p>We may update this policy occasionally. Continued use of the site constitutes acceptance of the revised policy.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== HEADER HIDE/SHOW - only show when at top ==========
+    let lastScrollTop = 0;
+    const header = document.getElementById('mainHeader');
+    const scrollThreshold = 10;
+
+    window.addEventListener('scroll', function() {
+        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // If at the very top, show header
+        if (currentScroll <= 10) {
+            header.classList.remove('header-hidden');
+            lastScrollTop = currentScroll;
+            return;
+        }
+        
+        // Scrolling down -> hide header
+        if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
+            header.classList.add('header-hidden');
+        }
+        // Never show header on scroll up unless at top (already handled)
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    });
+
+    // ========== SCROLL TO TOP BUTTON ==========
+    const scrollBtn = document.getElementById('scrollToTopBtn');
+
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            scrollBtn.classList.add('show');
+        } else {
+            scrollBtn.classList.remove('show');
+        }
+    });
+
+    scrollBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ========== PURCHASE MODAL LOGIC ==========
+    let selectedProductName = '';
+
+    function openPurchaseModal(productName) {
+        selectedProductName = productName;
+        const modal = document.getElementById('purchaseModal');
+        const modalText = document.getElementById('modalProductName');
+        modalText.innerText = `Do you want to purchase "${productName}"?`;
+        modal.style.display = 'block';
+    }
+
+    function closePurchaseModal() {
+        document.getElementById('purchaseModal').style.display = 'none';
+        selectedProductName = '';
+    }
+
+    function proceedToWhatsApp() {
+        if (selectedProductName) {
+            const whatsappNumber = "254714692912";
+            const message = `Hello Stella, I want to purchase this product: ${selectedProductName}`;
+            window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+        closePurchaseModal();
+    }
+
+    document.getElementById('confirmYesBtn').addEventListener('click', proceedToWhatsApp);
+    document.getElementById('confirmNoBtn').addEventListener('click', closePurchaseModal);
+
+    // ========== FOOTER MODALS ==========
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = 'block';
+    }
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+/* ========== EDIT PRODUCT PAGE – edit.css ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, #fef8f0 0%, #fff5e6 100%);
+    color: #1e1e2a;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+/* Container */
+.admin-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 32px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid rgba(255, 87, 34, 0.2);
+}
+
+/* Header inside container */
+.admin-container h1 {
+    background: linear-gradient(90deg, #1E88E5, #1565C0);
+    color: white;
+    padding: 28px 32px;
+    font-size: 1.8rem;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+/* Form styling */
+form {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Form fields (as_p output) */
+form p {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+}
+
+form label {
+    font-weight: 600;
+    color: #E63946;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+}
+
+form input, 
+form select, 
+form textarea {
+    padding: 12px 16px;
+    border: 2px solid #f0e0d0;
+    border-radius: 28px;
+    font-size: 1rem;
+    transition: all 0.3s;
+    background: #fffdf9;
+    font-family: inherit;
+}
+
+form input:focus, 
+form select:focus, 
+form textarea:focus {
+    outline: none;
+    border-color: #FF5722;
+    box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.2);
+}
+
+/* Checkbox and file inputs special handling */
+form input[type="checkbox"] {
+    width: auto;
+    align-self: flex-start;
+    transform: scale(1.2);
+    margin-left: 0;
+}
+
+form input[type="file"] {
+    padding: 8px;
+    background: #fff;
+}
+
+/* Help text */
+.helptext {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 4px;
+}
+
+/* Error messages */
+.errorlist {
+    list-style: none;
+    color: #E63946;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    background: #ffe8e6;
+    padding: 8px 12px;
+    border-radius: 20px;
+}
+
+/* Buttons and cancel link */
+form button, 
+form a {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-weight: bold;
+    font-size: 1rem;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+form button {
+    background: linear-gradient(135deg, #FF5722, #E63946);
+    color: white;
+    border: none;
+    width: fit-content;
+}
+
+form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(230, 57, 70, 0.4);
+}
+
+form a {
+    background: #f0e6df;
+    color: #1e1e2a;
+    border: 1px solid #ddd;
+    width: fit-content;
+}
+
+form a:hover {
+    background: #e0d6cf;
+    transform: translateY(-2px);
+}
+
+/* Button group layout */
+.form-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+    body {
+        padding: 20px;
+    }
+    .admin-container h1 {
+        font-size: 1.5rem;
+        padding: 20px 24px;
+    }
+    form {
+        padding: 24px;
+    }
+    form button, form a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 550px) {
+    .admin-container h1 {
+        font-size: 1.3rem;
+        padding: 16px 20px;
+    }
+    form {
+        padding: 20px;
+    }
+    form input, form select, form textarea {
+        font-size: 0.9rem;
+    }
+}
+
+::selection {
+    background: #FF5722;
+    color: white;
+}

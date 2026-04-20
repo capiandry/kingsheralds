@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product - Admin</title>
+    <link rel="stylesheet" href="{% static 'css/edit.css' %}">
+</head>
+<body>
+
+    <div class="admin-container">
+        <h1>Edit Product: {{ product.name }}</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Changes</button>
+            <a href="{% url 'admin_dashboard' %}">Cancel</a>
+        </form>
+    </div>
+
+    <div class="form-actions">
+    <button type="submit">Save Changes</button>
+    <a href="{% url 'admin_dashboard' %}">Cancel</a>
+</div>
+</body>
+</html>

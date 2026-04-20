@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health PDFs - Kings Heralds Natural Hub</title>
+    <link rel="stylesheet" href="{% static 'css/category.css' %}">
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <h1>Kings Heralds Natural Hub</h1>
+            <p class="motto">Your Natural Health Solution</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'products' %}">Products</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'logout' %}">Logout ({{ user.username }})</a></li>
+                    {% if user.is_superuser %}
+                        <li><a href="{% url 'admin_dashboard' %}">Admin Panel</a></li>
+                    {% endif %}
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="category-container">
+        <h1>Health PDFs</h1>
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <div class="price">KSh {{ product.price }}</div>
+                {% if product.is_unlocked %}
+                    <a href="{% url 'download_pdf' product.id %}" class="download-btn">Download PDF</a>
+                {% else %}
+                    <button onclick="unlockPDF('{{ product.id }}', '{{ product.name|escapejs }}')" class="unlock-btn">Unlock for KSh 50</button>
+                {% endif %}
+            </div>
+            {% empty %}
+                <p>No PDFs available at the moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePaymentModal()">&times;</span>
+        <h3>Unlock PDF for KSh 50</h3>
+        <p>Enter your M-Pesa number to receive payment prompt</p>
+        <input type="tel" id="mpesaNumber" placeholder="0712345678">
+        <button onclick="processPayment()" class="confirm-btn">Send Payment Prompt</button>
+    </div>
+</div>
+
+<script>
+    let currentPdfId = null;
+
+    function unlockPDF(pdfId, pdfName) {
+        if (confirm(`Are you sure you want to unlock "${pdfName}" for KSh 50 only?`)) {
+            currentPdfId = pdfId;
+            document.getElementById('paymentModal').style.display = 'block';
+        }
+    }
+
+    async function processPayment() {
+        const mpesaNumber = document.getElementById('mpesaNumber').value;
+        if (!mpesaNumber || mpesaNumber.length < 10) {
+            alert('Please enter a valid M-Pesa number (e.g., 0712345678)');
+            return;
+        }
+
+        const response = await fetch('/unlock-pdf/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                product_id: currentPdfId,
+                mpesa_number: mpesaNumber
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert('Payment successful! PDF unlocked. Click Download to save.');
+            location.reload();  // Refresh to show download button
+        } else {
+            alert('Payment failed. Please try again.');
+        }
+        closePaymentModal();
+    }
+
+    function closePaymentModal() {
+        document.getElementById('paymentModal').style.display = 'none';
+        currentPdfId = null;
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('paymentModal');
+        if (event.target === modal) {
+            closePaymentModal();
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Kings Heralds Natural Hub</title>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-box">
+            <h2>Create an Account</h2>
+            <form id="registerForm">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" id="official_names" placeholder="Official Names" required>
+                </div>
+                <div class="input-group">
+                    <input type="tel" id="phone_number" placeholder="Phone Number" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="Username (lowercase only)" pattern="[a-z0-9_]+" required>
+                </div>
+                
+                <!-- Password field with eye toggle -->
+                <div class="input-group password-group">
+                    <input type="password" id="password" placeholder="Password (min 8 characters)" required>
+                    <span class="toggle-password" onclick="togglePassword('password', this)">👁️</span>
+                    <div class="password-strength">
+                        <div id="strengthBar" class="strength-bar"></div>
+                        <span id="strengthText"></span>
+                    </div>
+                </div>
+                
+                <!-- Confirm Password field with eye toggle -->
+                <div class="input-group password-group">
+                    <input type="password" id="confirm_password" placeholder="Confirm Password" required>
+                    <span class="toggle-password" onclick="togglePassword('confirm_password', this)">👁️</span>
+                </div>
+                
+                <!-- Warning messages container -->
+                <div id="warningMessages" class="warning-messages"></div>
+                
+                <button type="submit">Register</button>
+            </form>
+            <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        function togglePassword(fieldId, eyeIcon) {
+            const field = document.getElementById(fieldId);
+            if (field.type === "password") {
+                field.type = "text";
+                eyeIcon.textContent = "🙈";
+            } else {
+                field.type = "password";
+                eyeIcon.textContent = "👁️";
+            }
+        }
+
+        // Password strength meter
+        const passwordInput = document.getElementById('password');
+        const strengthBar = document.getElementById('strengthBar');
+        const strengthText = document.getElementById('strengthText');
+        
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/)) strength++;
+            if (password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            const percentage = (strength / 5) * 100;
+            strengthBar.style.width = percentage + '%';
+            
+            if (strength <= 2) {
+                strengthBar.style.backgroundColor = '#e74c3c';
+                strengthText.textContent = 'Weak';
+            } else if (strength <= 4) {
+                strengthBar.style.backgroundColor = '#f39c12';
+                strengthText.textContent = 'Medium';
+            } else {
+                strengthBar.style.backgroundColor = '#27ae60';
+                strengthText.textContent = 'Strong';
+            }
+            
+            // Real-time password mismatch check
+            checkPasswordsMatch();
+        });
+
+        const confirmInput = document.getElementById('confirm_password');
+        confirmInput.addEventListener('input', checkPasswordsMatch);
+
+        function checkPasswordsMatch() {
+            const password = passwordInput.value;
+            const confirm = confirmInput.value;
+            const warningDiv = document.getElementById('warningMessages');
+            
+            if (confirm !== '' && password !== confirm) {
+                showWarning('Passwords do not match!');
+                return false;
+            } else {
+                // Clear mismatch warning if passwords match or confirm is empty
+                if (warningDiv.innerText === 'Passwords do not match!') {
+                    clearWarnings();
+                }
+                return true;
+            }
+        }
+
+        function showWarning(message) {
+            const warningDiv = document.getElementById('warningMessages');
+            warningDiv.innerHTML = `<div class="warning-error">⚠️ ${message}</div>`;
+        }
+
+        function clearWarnings() {
+            document.getElementById('warningMessages').innerHTML = '';
+        }
+
+        // Form submission
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearWarnings();
+            
+            const password = passwordInput.value;
+            const confirmPassword = confirmInput.value;
+            
+            // Client-side validations
+            if (password !== confirmPassword) {
+                showWarning('Passwords do not match!');
+                return;
+            }
+            
+            if (password.length < 8) {
+                showWarning('Password must be at least 8 characters long');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('official_names', document.getElementById('official_names').value);
+            formData.append('phone_number', document.getElementById('phone_number').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('username', document.getElementById('username').value);
+            formData.append('password1', password);
+            formData.append('password2', confirmPassword);
+            
+            const response = await fetch('/register/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showWarning('Registration successful! Redirecting to login...');
+                setTimeout(() => {
+                    window.location.href = '/login/';
+                }, 1500);
+            } else {
+                // Display server errors
+                let errorHtml = '';
+                for (const [field, errors] of Object.entries(data.errors)) {
+                    errorHtml += `<div class="warning-error">⚠️ ${field}: ${errors.join(', ')}</div>`;
+                }
+                document.getElementById('warningMessages').innerHTML = errorHtml;
+            }
+        });
+    </script>
+</body>
+</html>

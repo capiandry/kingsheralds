@@ -1,0 +1,300 @@
+/* ========== RESET & GLOBAL ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: #fef8f0;
+    color: #1e1e2a;
+    line-height: 1.5;
+}
+
+/* ========== ADMIN HEADER ========== */
+header {
+    background: linear-gradient(135deg, #1e3c72 0%, #0f2b4f 100%);
+    color: white;
+    padding: 20px 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-bottom: 3px solid #FF5722;
+}
+
+.admin-header {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.admin-header h1 {
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, #FF8C42, #FF5722);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: none;
+}
+
+.admin-header nav {
+    display: flex;
+    gap: 20px;
+}
+
+.admin-header nav a {
+    color: #ffd966;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 40px;
+    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.admin-header nav a:hover {
+    background: #FF5722;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px #FF5722;
+}
+
+/* ========== ADMIN CONTAINER ========== */
+.admin-container {
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* ========== SECTIONS ========== */
+section {
+    background: white;
+    border-radius: 28px;
+    padding: 28px 32px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 87, 34, 0.15);
+    transition: box-shadow 0.3s;
+}
+
+section:hover {
+    box-shadow: 0 12px 28px rgba(255, 87, 34, 0.1);
+}
+
+section h2 {
+    font-size: 1.8rem;
+    color: #E63946;
+    margin-bottom: 24px;
+    border-left: 6px solid #FF5722;
+    padding-left: 18px;
+}
+
+/* ========== USERS TABLE ========== */
+.users-section table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+    display: block;
+}
+
+.users-section th, 
+.users-section td {
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 1px solid #f0e6df;
+}
+
+.users-section th {
+    background: linear-gradient(90deg, #1E88E5, #1565C0);
+    color: white;
+    font-weight: 600;
+    border-radius: 12px 12px 0 0;
+}
+
+.users-section tr:hover {
+    background: #fff5ef;
+}
+
+/* ========== ADD PRODUCT FORM ========== */
+.add-product-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.add-product-section form p {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.add-product-section label {
+    font-weight: 600;
+    color: #1E88E5;
+    font-size: 0.95rem;
+}
+
+.add-product-section input, 
+.add-product-section select, 
+.add-product-section textarea {
+    padding: 12px 16px;
+    border: 2px solid #f0e0d0;
+    border-radius: 28px;
+    font-size: 1rem;
+    transition: all 0.3s;
+    background: #fffdf9;
+}
+
+.add-product-section input:focus, 
+.add-product-section select:focus, 
+.add-product-section textarea:focus {
+    outline: none;
+    border-color: #FF5722;
+    box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.2);
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #FF5722, #E63946);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 40px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+    width: fit-content;
+    align-self: flex-start;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(230, 57, 70, 0.4);
+}
+
+/* ========== PRODUCTS MANAGEMENT ========== */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.product-item {
+    background: #fffcf9;
+    border-radius: 24px;
+    padding: 20px;
+    border: 1px solid #ffe0cc;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    border-color: #FF5722;
+}
+
+.product-item h3 {
+    font-size: 1.4rem;
+    color: #1E88E5;
+    margin-bottom: 12px;
+}
+
+.product-item p {
+    margin: 8px 0;
+    color: #4a4a5a;
+    font-size: 0.95rem;
+}
+
+.product-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+}
+
+.edit-btn, .delete-btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.edit-btn {
+    background: #1E88E5;
+    color: white;
+}
+
+.edit-btn:hover {
+    background: #1565C0;
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(30, 136, 229, 0.4);
+}
+
+.delete-btn {
+    background: #E63946;
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #c1121f;
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.4);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 850px) {
+    .admin-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .admin-container {
+        padding: 0 15px;
+    }
+    
+    section {
+        padding: 20px;
+    }
+    
+    .users-section table {
+        font-size: 0.85rem;
+    }
+    
+    .users-section th, .users-section td {
+        padding: 8px 6px;
+    }
+    
+    .product-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 550px) {
+    .admin-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    section h2 {
+        font-size: 1.4rem;
+    }
+    
+    .product-item h3 {
+        font-size: 1.2rem;
+    }
+}
+
+::selection {
+    background: #FF5722;
+    color: white;
+}

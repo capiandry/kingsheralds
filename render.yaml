@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: kingsheralds
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input
+    startCommand: python manage.py migrate --noinput && gunicorn kingsheralds.wsgi --bind 0.0.0.0:$PORT --log-file -
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        sync: falseservices:
+  - type: web
+    name: kingsheralds-web
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input
+    startCommand: python manage.py migrate && gunicorn kingsheralds.wsgi:application --bind 0.0.0.0:$PORT
+databases:
+  - name: mysitedb
+    plan: free
+    databaseName: mysite
+    user: mysite
+
+services:
+  - type: web
+    plan: free
+    name: mysite
+    runtime: python
+    buildCommand: './build.sh'
+    startCommand: 'python -m gunicorn mysite.asgi:application -k uvicorn.workers.UvicornWorker'
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mysitedb
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
